@@ -25,6 +25,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+static/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -164,3 +165,5 @@ cython_debug/
 
 # Database
 *.sqlite3
+.python-version
+locallibrary.json

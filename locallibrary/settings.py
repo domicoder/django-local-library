@@ -14,11 +14,15 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+import dj_database_url
 from decouple import config  # noqa pylint: disable=import-error
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+ENVIRONMENT = config("ENVIRONMENT", default="development")
+IN_DEV = ENVIRONMENT == "development"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -27,10 +31,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1',
+                 'django-local-library-nc-c9426f3bbb26.herokuapp.com']
 
+CORS_ALLOWED_ORIGINS = [
+    "https://django-local-library-nc-c9426f3bbb26.herokuapp.com/",
+]
+
+if IN_DEV:
+    CORS_ALLOWED_ORIGINS.append("https://localhost:8080")
+    CORS_ALLOWED_ORIGINS.append("http://127.0.0.1:8000")
 
 # Application definition
 
@@ -49,6 +61,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     # Manages sessions across requests
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -84,12 +97,34 @@ WSGI_APPLICATION = 'locallibrary.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Database
+"""There are two ways to specifiy the database connection
+
+1. Heroku - we use dj_database_url to interpret Heroku's DATABASE_URL env variable.
+2. Specify DB_NAME, DB_USER, DB_PASS, and DB_HOST Directly in the env file.
+"""
+# Update database configuration with dj_database_url
+heroku_default_db = dj_database_url.config(conn_max_age=600)
+if bool(heroku_default_db):
+    DATABASES = {"default": heroku_default_db}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": config("DB_NAME"),
+            "USER": config("DB_USER"),
+            "PASSWORD": config("DB_PASS", default=""),
+            "HOST": config("DB_HOST"),
+            'PORT': config("DB_PORT"),
+            "CONN_MAX_AGE": 600,
+        },
     }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
@@ -126,7 +161,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "..", "static")
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = 'static/'
 
 # Default primary key field type
