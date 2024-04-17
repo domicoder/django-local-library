@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Author</h1>
+
+  <p><strong>First name: </strong>{{ author.first_name }}</p>
+  <p><strong>Last name: </strong> {{ author.last_name }}</p>
+  <p><strong>Date of birth: </strong> <span>({{author.date_of_birth}})</span> - <span>({{ author.display_date_of_death }})</span></p>
+
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Books</h4>
+ 
+    {% for book in author.get_author_books %}
+      <hr />
+      <p><strong>Title: </strong> {{ book.title }}</p>
+      <p><strong>Summary: </strong> {{ book.summary }}</p>
+      <p><strong>ISBN: </strong> {{ book.isbn }}</p>
+      <p><strong>Genre: </strong> {{ book.display_genre }}</p>
+    {% empty %}
+    <p>There are no books for this Author.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

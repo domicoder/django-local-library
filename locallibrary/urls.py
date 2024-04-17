@@ -20,6 +20,8 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
 
+from catalog.views import CustomLoginView  # noqa
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
@@ -34,3 +36,11 @@ urlpatterns += [
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+# authentication
+# Add Django site authentication urls (for login, logout, password management)
+urlpatterns += [
+    path('accounts/login/', CustomLoginView.as_view(),
+         name='login'),
+    path('accounts/', include('django.contrib.auth.urls')),
+]

@@ -1,0 +1,18 @@
+.menu-option-sidebar {
+  padding: 6px 12px;
+}
+
+.sidebar-nav {
+  margin-top: 20px;
+  padding: 0;
+  list-style: none;
+}
+
+#logout-form {
+  display: inline;
+}
+
+#logout-form button {
+  padding: 0;
+  margin: 0;
+}
