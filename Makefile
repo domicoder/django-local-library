@@ -1,5 +1,5 @@
 run:
-	python3 manage.py runserver
+	python3 manage.py runserver 8001
 migrations:
 	python3 manage.py makemigrations
 migrations-catalog:
@@ -14,3 +14,5 @@ loaddata:
 	python manage.py loaddata locallibrary.json
 clean:
 	rm -r catalog/migrations
+collstatic:
+	python manage.py collectstatic

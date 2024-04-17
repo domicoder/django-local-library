@@ -21,14 +21,14 @@
           {% block sidebar %}
             <ul class="sidebar-nav">
             {% if user.is_authenticated %}
-              {% if not perms.catalog.can_mark_returned %}
+              {% if not perms.catalog.can_mark_returned or user.is_staff %}
                 <li class="menu-option-sidebar"><a href="{% url 'index' %}">Home</a></li>
                 <li class="menu-option-sidebar"><a href="{% url 'books' %}">All books</a></li>
                 <li class="menu-option-sidebar"><a href="{% url 'authors' %}">All authors</a></li>
                 <li class="menu-option-sidebar" style="margin-top:40px;">User: {{ user.get_username }}</li>
                 <li class="menu-option-sidebar"><a href="{% url 'my-borrowed' %}">My Borrowed</a></li>
               {% endif %}
-              {% if perms.catalog.can_mark_returned %}
+              {% if perms.catalog.can_mark_returned and not user.is_staff %}
                 <span style="border-bottom: 1px solid #e8e8e8; width: 100%; display: block; margin-top: 20px;"></span>
                 <li class="menu-option-sidebar" style="margin-top:40px;">Libarian: {{ user.get_username }}</li>
                 <li class="menu-option-sidebar"><a href="{% url 'all-borrowed' %}">All Borrowed</a></li>
