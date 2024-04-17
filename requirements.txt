@@ -1,7 +1,6 @@
 asgiref==3.8.0
 black==24.3.0
 click==8.1.7
-decouple==0.0.7
 dj-database-url==2.1.0
 Django==4.2.11
 flake8==7.0.0
